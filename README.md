@@ -8,6 +8,12 @@
 
 ## Setup
 
+```zsh
+# ~/.zshenv
+export XDG_CONFIG_HOME="$HOME/.config"
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+```
+
 ```sh
 cd ~
 
@@ -15,9 +21,10 @@ curl -sS https://starship.rs/install.sh | sh
 curl -L git.io/antigen > ~/.antigen.zsh
 starship preset plain-text-symbols -o ~/.config/starship.toml
 
+cd "$XDG_CONFIG_HOME"
 ghq get git@github.com/tubo28/zsh-config.git
-mv .zsh .zsh.bk
-ln -s ~/ghq/github.com/tubo28/zsh-config .zsh
+mv zsh zsh.bk
+ln -s ~/ghq/github.com/tubo28/zsh-config zsh
 
 mv .zshrc .zshrc.bk
 echo 'source ~/.zsh/main.zsh' > .zshrc

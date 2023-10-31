@@ -1,17 +1,6 @@
 ## LANG
 export LANG="en_US.UTF-8"
 
-## Starship
-eval "$(starship init zsh)"
-
-## Antigen
-source ~/.antigen.zsh
-antigen bundle z-shell/F-Sy-H --branch=main
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
-antigen bundle agkozak/zsh-z
-antigen apply
-
 ## History
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
@@ -168,7 +157,7 @@ ggcd() {
 }
 
 randstr() {
-    perl "$HOME/.zsh/randstr.pl" "$@"
+    perl "$ZDOTDIR/randstr.pl" "$@"
 }
 
 # uniq but keep order
@@ -289,3 +278,14 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # Scala
 zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
+
+## Starship
+eval "$(starship init zsh)"
+
+## Antigen
+source ~/.antigen.zsh
+antigen bundle z-shell/F-Sy-H --branch=main
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions
+antigen bundle agkozak/zsh-z
+antigen apply
