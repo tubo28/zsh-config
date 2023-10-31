@@ -284,7 +284,8 @@ if command -v brew > /dev/null 2>&1 && [[ -d "$(brew --prefix)/share/google-clou
 fi
 
 # Sdkman
-zsh_add_path "$HOME/.sdkman/candidates/java/current/bin/java"
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # Scala
 zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
