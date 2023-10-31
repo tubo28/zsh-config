@@ -106,6 +106,22 @@ fzf-ghq() {
 zle -N fzf-ghq
 bindkey "^g" fzf-ghq
 
+# https://zenn.dev/yamo/articles/5c90852c9c64ab
+function select-git-switch() {
+  target_br=$(
+    git branch -a --sort=-committerdate |
+      fzf --preview-window="right,65%" --preview="echo {} | tr -d ' *' | xargs git log --color=always" |
+        head -n 1 |
+        perl -pe "s/\s//g; s/\*//g; s/remotes\/origin\///g"
+  )
+  if [ -n "$target_br" ]; then
+    BUFFER="git switch $target_br"
+    zle accept-line
+  fi
+}
+zle -N select-git-switch
+bindkey "^b" select-git-switch
+
 ## Alias
 alias ls="ls --color=auto"
 alias l="ls"
