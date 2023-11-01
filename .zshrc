@@ -67,8 +67,6 @@ setopt auto_param_slash
 ## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
 ## 補完候補の色づけ
-# eval `dircolors`
-# export ZLS_COLORS=$LS_COLORS
 if command_exists dircolors; then
     eval `dircolors`
     export ZLS_COLORS=$LS_COLORS
