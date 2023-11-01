@@ -270,6 +270,7 @@ fi
 # gcloud
 if command_exists brew && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; then
     source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" # This may need to be adjusted if the gcloud init script isn't directly translatable to zsh.
+    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # Sdkman
