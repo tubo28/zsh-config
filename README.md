@@ -11,7 +11,11 @@
 Append this to `.zshenv`:
 
 ```zsh
-export XDG_CONFIG_HOME="$HOME/.config"
+# https://wiki.archlinux.org/title/XDG_Base_Directory
+[[ -z $XDG_CONFIG_HOME ]] && export XDG_CONFIG_HOME="${HOME}/.config"
+[[ -z $XDG_DATA_HOME ]]   && export XDG_DATA_HOME="${HOME}/.local/share"
+[[ -z $XDG_CACHE_HOME ]]  && export XDG_CACHE_HOME="${HOME}/.cache"
+[[ -z $XDG_STATE_HOME ]]  && export XDG_STATE_HOME="${HOME}/.local/state"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 ```
 
