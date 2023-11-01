@@ -259,11 +259,7 @@ fi
 
 # fzf
 if command -v fzf > /dev/null 2>&1; then
-    findcmd="find"
-    if command -v bfs > /dev/null 2>&1; then
-        findcmd="bfs"
-    fi
-    export FZF_DEFAULT_COMMAND="$findcmd -type d -name .git -prune -o -print"
+    export FZF_DEFAULT_COMMAND="find -type d -name .git -prune -o -print"
     export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_history --bind=ctrl-p:up,ctrl-n:down,ctrl-j:accept,ctrl-k:kill-line --no-sort --no-mouse"
 fi
 
