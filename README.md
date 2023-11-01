@@ -3,7 +3,7 @@
 ## Dependency
 
 * Zsh
-* [Antigen](https://github.com/zsh-users/antigen)
+* [Zinit](https://github.com/zdharma-continuum/zinit)
 * [Starship](https://starship.rs/)
 
 ## Setup
