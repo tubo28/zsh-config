@@ -156,8 +156,8 @@ if [[ -f /proc/version && $(grep -qi Microsoft /proc/version) ]]; then
 fi
 
 ## Util functions
+# ghq get and cd
 ggcd() {
-    # Description: ghq get and cd
     echo "ghq get $@"
     local tmp=$(mktemp)
     ghq get $@ 2>&1 | tee $tmp
@@ -167,19 +167,15 @@ ggcd() {
     cd $dir || return 2
 }
 
-randstr() {
-    perl "$ZDOTDIR/randstr.pl" "$@"
-}
+# generate random string
+randstr() { perl "$ZDOTDIR/randstr.pl" "$@" }
 
 # uniq but keep order
-uniq2() {
-    perl -ne 'print if !$u{$_}++'
-}
+uniq2() { perl -ne 'print if !$u{$_}++' }
 
 ## PATH
 
 # Homebrew
-
 # homebrew によってインストールしたもの
 if [[ -f "/usr/local/bin/brew" ]]; then
     BREW_BIN="/usr/local/bin/brew"
@@ -282,8 +278,8 @@ zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 if command_exists starship; then
     eval "$(starship init zsh)"
 else
-    echo "starship is not installed https://github.com/starship/starship"  1>&2
-    # Fallback to simple PROMPT if starship is not installed
+    # Starship is not installed https://github.com/starship/starship"
+    # Fallback to simple PROMPT
     # https://dev.to/cassidoo/customizing-my-zsh-prompt-3417
     autoload -Uz vcs_info
     precmd() { vcs_info }

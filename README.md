@@ -2,9 +2,10 @@
 
 ## Dependency
 
-* Zsh
+* zsh
+* git
 * [Zinit](https://github.com/zdharma-continuum/zinit)
-* [Starship](https://starship.rs/)
+* [Starship](https://starship.rs/) (optinal)
 
 ## Setup
 
@@ -22,20 +23,21 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 Place config files:
 
 ```sh
+mkdir -p "$XDG_CONFIG_HOME"
 cd "$XDG_CONFIG_HOME"
-ghq get git@github.com/tubo28/zsh-config.git
 mv zsh zsh.bk
-ln -s ~/ghq/github.com/tubo28/zsh-config zsh
+git clone https://github.com/tubo28/zsh-config.git zsh
+cd zsh && git remote set-url origin git@github.com/tubo28/zsh-config.git # Optional
 ```
 
-Install Starship:
+Install Starship (optional):
 
 ```sh
 curl -sS https://starship.rs/install.sh | sh # or brew install starship
 starship preset plain-text-symbols -o ~/.config/starship.toml
 ```
 
-Disable slow prompt.
+Disable slow prompt of starship:
 
 ```toml
 [scala]
