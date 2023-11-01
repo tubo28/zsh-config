@@ -294,14 +294,18 @@ else
     PROMPT='%F{green}%*%f %F{cyan}%~%f %F{red}${vcs_info_msg_0_}%f$ '
 fi
 
-## Antigen
-if [[ -f "$XDG_CONFIG_HOME/antigen.zsh" ]]; then
-    source "$XDG_CONFIG_HOME/antigen.zsh"
-    antigen bundle z-shell/F-Sy-H --branch=main
-    antigen bundle zsh-users/zsh-autosuggestions
-    antigen bundle zsh-users/zsh-completions
-    antigen bundle agkozak/zsh-z
-    antigen apply
-else
-    echo "Antigen is not installed https://github.com/zsh-users/antigen" 1>&2
-fi
+# Install zinit
+# https://github.com/zdharma-continuum/zinit#manual
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
+
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Install plugins
+zinit load z-shell/F-Sy-H
+zinit load zsh-users/zsh-autosuggestions
+zinit load zsh-users/zsh-completions
+zinit load agkozak/zsh-z
