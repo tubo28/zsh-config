@@ -280,12 +280,24 @@ export SDKMAN_DIR="$HOME/.sdkman"
 zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 
 ## Starship
-eval "$(starship init zsh)"
+if command -v starship > /dev/null 2>&1; then
+    eval "$(starship init zsh)"
+else
+    # Fallback to simple PROMPT if starship is not installed
+    # https://dev.to/cassidoo/customizing-my-zsh-prompt-3417
+    autoload -Uz vcs_info
+    precmd() { vcs_info }
+    zstyle ':vcs_info:git:*' formats '%b '
+    setopt PROMPT_SUBST
+    PROMPT='%F{green}%*%f %F{cyan}%~%f %F{red}${vcs_info_msg_0_}%f$ '
+fi
 
 ## Antigen
-source ~/.antigen.zsh
-antigen bundle z-shell/F-Sy-H --branch=main
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
-antigen bundle agkozak/zsh-z
-antigen apply
+if [[ -f ~/.antigen.zsh ]]; then
+    source ~/.antigen.zsh
+    antigen bundle z-shell/F-Sy-H --branch=main
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle zsh-users/zsh-completions
+    antigen bundle agkozak/zsh-z
+    antigen apply
+fi
