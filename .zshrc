@@ -1,6 +1,15 @@
 ## LANG
 export LANG="en_US.UTF-8"
 
+# ディレクトリが存在するかつまだ追加されていない場合のみPATHに追加
+zsh_add_path() {
+    if [[ -d $1 ]] && [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
+        export PATH="$1:$PATH"
+    fi
+}
+
+command_exists() { command -v "$1" > /dev/null 2>&1; }
+
 ## History
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
@@ -60,10 +69,10 @@ zstyle ':completion:*:default' menu select=1
 ## 補完候補の色づけ
 # eval `dircolors`
 # export ZLS_COLORS=$LS_COLORS
-if command -v dircolors > /dev/null 2>&1; then
+if command_exists dircolors; then
     eval `dircolors`
     export ZLS_COLORS=$LS_COLORS
-elif command -v gdircolors > /dev/null 2>&1; then
+elif command_exists gdircolors; then
     eval `gdircolors`
     export ZLS_COLORS=$LS_COLORS
 fi
@@ -169,32 +178,23 @@ uniq2() {
     perl -ne 'print if !$u{$_}++'
 }
 
-# ディレクトリが存在するかつまだ追加されていない場合のみPATHに追加
-zsh_add_path() {
-    if [[ -d $1 ]] && [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
-        export PATH="$1:$PATH"
-    fi
-}
-
 ## PATH
 
 # Homebrew
-# https://zenn.dev/tet0h/articles/a92651d52bd82460aefb
-if [[ -o interactive ]]; then
-    # Commands to run in interactive sessions can go here
-    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+
+# homebrew によってインストールしたもの
+if [[ -f "/usr/local/bin/brew" ]]; then
+    BREW_BIN="/usr/local/bin/brew"
+elif [[ -f "/opt/homebrew/bin/brew" ]]; then # M1 Mac or later
+    BREW_BIN="/opt/homebrew/bin/brew"
+    # https://zenn.dev/tet0h/articles/a92651d52bd82460aefb
+    if [[ -o interactive ]]; then
+        # Commands to run in interactive sessions can go here
         eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 fi
 
-# homebrew によってインストールしたもの
-BREW_BIN="/usr/local/bin/brew"
-if [[ -f "/opt/homebrew/bin/brew" ]]; then
-    # M1 Mac から homebrew のパスが変更された
-    BREW_BIN="/opt/homebrew/bin/brew"
-fi
-
-if command -v $BREW_BIN > /dev/null 2>&1; then
+if command_exists $BREW_BIN; then
     BREW_PREFIX=$($BREW_BIN --prefix)
     for bindir in $BREW_PREFIX/opt/*/libexec/gnubin; do
         zsh_add_path "$bindir"
@@ -215,13 +215,13 @@ zsh_add_path "/Applications/IntelliJ IDEA.app/Contents/MacOS"
 zsh_add_path "/snap/bin"
 zsh_add_path "/usr/local/opt/ruby/bin"
 
-if command -v ruby > /dev/null 2>&1 && command -v gem > /dev/null 2>&1; then
+if command_exists ruby && command_exists gem; then
     zsh_add_path "$(ruby -e 'puts Gem.bindir')"
 fi
 
 # Perl
 zsh_add_path "$HOME/.plenv/bin"
-if command -v plenv > /dev/null 2>&1; then
+if command_exists plenv; then
     eval "$(plenv init -)"
 fi
 
@@ -236,7 +236,7 @@ elif [[ -d /usr/local/opt/go ]]; then
     export GOROOT=/usr/local/opt/go/libexec
     zsh_add_path "$GOPATH/bin"
     zsh_add_path "$GOROOT/bin"
-elif command -v go > /dev/null 2>&1; then
+elif command_exists go; then
     export GOPATH="$HOME/go"
     zsh_add_path "$GOPATH/bin"
     zsh_add_path "$GOROOT/bin"
@@ -256,19 +256,19 @@ if [[ -f ~/.secrets ]]; then
 fi
 
 # Editor
-if command -v nano > /dev/null 2>&1; then
+if command_exists nano; then
     export EDITOR=nano
     export GIT_EDITOR=nano
 fi
 
 # fzf
-if command -v fzf > /dev/null 2>&1; then
+if command_exists fzf; then
     export FZF_DEFAULT_COMMAND="find -type d -name .git -prune -o -print"
     export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_history --bind=ctrl-p:up,ctrl-n:down,ctrl-j:accept,ctrl-k:kill-line --no-sort --no-mouse"
 fi
 
 # gcloud
-if command -v brew > /dev/null 2>&1 && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; then
+if command_exists brew && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; then
     source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" # This may need to be adjusted if the gcloud init script isn't directly translatable to zsh.
 fi
 
@@ -280,7 +280,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 
 ## Starship
-if command -v starship > /dev/null 2>&1; then
+if command_exists starship; then
     eval "$(starship init zsh)"
 else
     echo "starship is not installed https://github.com/starship/starship"  1>&2
