@@ -283,6 +283,7 @@ zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 if command -v starship > /dev/null 2>&1; then
     eval "$(starship init zsh)"
 else
+    echo "starship is not installed https://github.com/starship/starship"  1>&2
     # Fallback to simple PROMPT if starship is not installed
     # https://dev.to/cassidoo/customizing-my-zsh-prompt-3417
     autoload -Uz vcs_info
@@ -293,11 +294,13 @@ else
 fi
 
 ## Antigen
-if [[ -f ~/.antigen.zsh ]]; then
-    source ~/.antigen.zsh
+if [[ -f "$XDG_CONFIG_HOME/antigen.zsh" ]]; then
+    source "$XDG_CONFIG_HOME/antigen.zsh"
     antigen bundle z-shell/F-Sy-H --branch=main
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-completions
     antigen bundle agkozak/zsh-z
     antigen apply
+else
+    echo "Antigen is not installed https://github.com/zsh-users/antigen" 1>&2
 fi
