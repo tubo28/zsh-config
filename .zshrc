@@ -20,7 +20,7 @@ setopt hist_ignore_dups
 ## ヒストリに追加されるコマンド行が古いものと同じなら古いものを削除
 setopt hist_ignore_all_dups
 ## 余分な空白は詰めて記録
-setopt hist_reduce_blanks  
+setopt hist_reduce_blanks
 ## zshプロセス終了時ではなく毎コマンド終了時に書き込む
 setopt appendhistory
 setopt INC_APPEND_HISTORY
