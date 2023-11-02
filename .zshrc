@@ -151,7 +151,7 @@ alias t="tig"
 alias d="docker"
 
 # 'emacs -nw' on WSL
-if [[ -f /proc/version && $(grep -qi Microsoft /proc/version) ]]; then
+if [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
     alias emacs='emacs -nw'
 fi
 
