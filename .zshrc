@@ -225,7 +225,10 @@ command_exists go || zsh_add_path "/usr/local/opt/go/bin"
 # Bins installed by `go install`
 command_exists go && zsh_add_path "$(go env GOPATH)/bin"
 
+# Rust
 zsh_add_path "$HOME/.cargo/bin"
+
+# Zig
 zsh_add_path "/usr/local/zig"
 
 # My bin
