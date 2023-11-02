@@ -219,22 +219,11 @@ if command_exists plenv; then
     eval "$(plenv init -)"
 fi
 
-# Golang
-if [[ -d /usr/local/go/ ]]; then
-    export GOPATH=$HOME/go
-    export GOROOT=/usr/local/go
-    zsh_add_path "$GOPATH/bin"
-    zsh_add_path "$GOROOT/bin"
-elif [[ -d /usr/local/opt/go ]]; then
-    export GOPATH="$HOME/go"
-    export GOROOT=/usr/local/opt/go/libexec
-    zsh_add_path "$GOPATH/bin"
-    zsh_add_path "$GOROOT/bin"
-elif command_exists go; then
-    export GOPATH="$HOME/go"
-    zsh_add_path "$GOPATH/bin"
-    zsh_add_path "$GOROOT/bin"
-fi
+# Go
+command_exists go || zsh_add_path "/usr/local/go/bin"
+command_exists go || zsh_add_path "/usr/local/opt/go/bin"
+# Bins installed by `go install`
+command_exists go && zsh_add_path "$(go env GOPATH)/bin"
 
 zsh_add_path "$HOME/.cargo/bin"
 zsh_add_path "/usr/local/zig"
