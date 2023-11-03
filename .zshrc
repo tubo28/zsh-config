@@ -143,8 +143,6 @@ alias u="cd .."
 alias f='fg'
 alias fgfg='f'
 
-alias sbt="sbt -mem 4096"
-
 alias g="git"
 alias t="tig"
 
