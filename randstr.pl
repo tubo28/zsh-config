@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use Getopt::Long;
 use Pod::Usage;
 
@@ -19,21 +19,17 @@ GetOptions(
   'h|help' => sub { pod2usage(-verbose => 99, -sections => "USAGE") }
 ) or pod2usage(2);
 
-$p =~ s/X/ $s->[ get_random_index(@{$s}) ] /ge;
-
-# Print to STDOUT
-print "$p\n";
-
-# Append to ~/.randstr
-open my $fh, '>>', "$ENV{HOME}/.randstr" or die "Can't open file: $!";
-print $fh "$p\n";
+open my $fh, '<:raw', '/dev/urandom' or die "Can't open file: $!";
+$p =~ s/X/ random_char($s, $fh) /ge;
 close $fh;
 
-sub get_random_index {
-  open my $fh, '<:raw', '/dev/urandom' or die "Can't open file: $!";
-  read $fh, my $data, 4;
-  close $fh;
-  return unpack('L', $data) % @_;
+print "$p\n";
+
+sub random_char {
+    my ($allowed_chars, $fh) = @_;
+    my $char;
+    read $fh, $char, 1 while !grep { $char eq $_ } @$allowed_chars;
+    return $char;
 }
 
 __END__

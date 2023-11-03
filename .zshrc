@@ -163,7 +163,15 @@ ggcd() {
 }
 
 # generate random string
-randstr() { perl "$ZDOTDIR/randstr.pl" "$@" }
+if [[ -f "$ZDOTDIR/randstr.pl" ]]; then
+    randstr() {
+        result=$(perl "$ZDOTDIR/randstr.pl" "$@")
+        if [[ ! -z "$result" ]]; then
+            echo $result
+            echo $result >> "$HOME/.randstr"
+        fi
+    }
+fi
 
 # uniq but keep order
 uniq2() { perl -ne 'print if !$u{$_}++' }
