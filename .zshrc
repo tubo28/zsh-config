@@ -275,17 +275,21 @@ else
 fi
 
 # Install zinit
-# https://github.com/zdharma-continuum/zinit#manual
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-source "${ZINIT_HOME}/zinit.zsh"
+if command_exists git; then
+    # https://github.com/zdharma-continuum/zinit#manual
+    ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+    [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+    [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    source "${ZINIT_HOME}/zinit.zsh"
 
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+    autoload -Uz _zinit
+    (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Install plugins
-zinit load z-shell/F-Sy-H
-zinit load zsh-users/zsh-autosuggestions
-zinit load zsh-users/zsh-completions
-zinit load agkozak/zsh-z
+    # Install plugins
+    zinit load z-shell/F-Sy-H
+    zinit load zsh-users/zsh-autosuggestions
+    zinit load zsh-users/zsh-completions
+    zinit load agkozak/zsh-z
+else
+    echo "failed to initialize zinit; git is not installed" 2>&1
+fi
