@@ -9,6 +9,15 @@
 
 ## Setup
 
+### Super easy way
+
+```sh
+mv ~/.zshrc ~/.zshrc.bk
+curl -fsS https://raw.githubusercontent.com/tubo28/zsh-config/main/.zshrc > ~/.zshrc
+```
+
+### Normal way
+
 Append this to `.zshenv`:
 
 ```zsh
@@ -24,10 +33,7 @@ Place config files:
 
 ```sh
 mkdir -p "$XDG_CONFIG_HOME"
-cd "$XDG_CONFIG_HOME"
-mv zsh zsh.bk
-git clone https://github.com/tubo28/zsh-config.git zsh
-cd zsh && git remote set-url origin git@github.com/tubo28/zsh-config.git # Optional
+git clone https://github.com/tubo28/zsh-config.git "$ZDOTDIR"
 ```
 
 Install Starship (optional):
@@ -35,11 +41,5 @@ Install Starship (optional):
 ```sh
 curl -sS https://starship.rs/install.sh | sh # or brew install starship
 starship preset plain-text-symbols -o ~/.config/starship.toml
-```
-
-Disable slow prompt of starship:
-
-```toml
-[scala]
-disabled = true
+starship toggle scala # Disable slow prompt
 ```
