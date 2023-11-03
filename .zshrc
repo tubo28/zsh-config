@@ -102,7 +102,6 @@ fzf-ghq() {
 
   zle reset-prompt
 }
-
 zle -N fzf-ghq
 bindkey "^g" fzf-ghq
 
@@ -148,10 +147,8 @@ alias t="tig"
 
 alias d="docker"
 
-# 'emacs -nw' on WSL
-if [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
-    alias emacs='emacs -nw'
-fi
+# Always no-window mode on WSL
+[[ -f /proc/version ]] && grep -qi microsoft /proc/version && alias emacs='emacs -nw'
 
 ## Util functions
 # ghq get and cd
@@ -207,15 +204,12 @@ zsh_add_path "/Applications/IntelliJ IDEA.app/Contents/MacOS"
 zsh_add_path "/snap/bin"
 zsh_add_path "/usr/local/opt/ruby/bin"
 
-if command_exists ruby && command_exists gem; then
-    zsh_add_path "$(ruby -e 'puts Gem.bindir')"
-fi
+# Ruby
+command_exists ruby && command_exists gem && zsh_add_path "$(ruby -e 'puts Gem.bindir')"
 
 # Perl
 zsh_add_path "$HOME/.plenv/bin"
-if command_exists plenv; then
-    eval "$(plenv init -)"
-fi
+command_exists plenv && eval "$(plenv init -)"
 
 # Go
 command_exists go || zsh_add_path "/usr/local/go/bin"
@@ -235,9 +229,8 @@ if [[ -d ~/.local/bin ]]; then
     export LD_LIBRARY_PATH="$HOME/.local/lib:$HOME/.local/lib64:$LD_LIBRARY_PATH"
 fi
 
-if [[ -f ~/.secrets ]]; then
-    source ~/.secrets
-fi
+# Private file
+[[ -f ~/.private ]] && source ~/.private
 
 # Editor
 if command_exists nano; then
@@ -246,10 +239,8 @@ if command_exists nano; then
 fi
 
 # fzf
-if command_exists fzf; then
-    export FZF_DEFAULT_COMMAND="find -type d -name .git -prune -o -print"
-    export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_history --bind=ctrl-p:up,ctrl-n:down,ctrl-j:accept,ctrl-k:kill-line --no-sort --no-mouse"
-fi
+export FZF_DEFAULT_COMMAND="find -type d -name .git -prune -o -print"
+export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_history --bind=ctrl-p:up,ctrl-n:down,ctrl-j:accept,ctrl-k:kill-line --no-sort --no-mouse"
 
 # gcloud
 if command_exists brew && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; then
