@@ -241,7 +241,10 @@ fi
 [[ -f ~/.private ]] && source ~/.private
 
 # Editor
-command_exists nano && export EDITOR=nano
+if command_exists nano; then
+    export EDITOR=nano
+    export GIT_EDITOR="$EDITOR"
+fi
 
 # fzf
 export FZF_DEFAULT_COMMAND="find -type d -name .git -prune -o -print"
