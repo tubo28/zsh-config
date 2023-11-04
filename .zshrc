@@ -119,7 +119,7 @@ function select-git-switch() {
   fi
 }
 zle -N select-git-switch
-bindkey "^b" select-git-switch
+bindkey "^s" select-git-switch
 
 ## Alias
 alias ls="ls --color=auto"
