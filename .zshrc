@@ -260,6 +260,9 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # Scala
 zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 
+# kubectl
+command_exists kubectl && source <(kubectl completion zsh)
+
 ## Starship
 if command_exists starship; then
     eval "$(starship init zsh)"
@@ -290,6 +293,7 @@ if command_exists git; then
     zinit load zsh-users/zsh-autosuggestions
     zinit load zsh-users/zsh-completions
     zinit load agkozak/zsh-z
+    zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 else
     echo "failed to initialize zinit; git is not installed" 2>&1
 fi
