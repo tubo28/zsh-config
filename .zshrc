@@ -213,6 +213,7 @@ zsh_add_path "/snap/bin"
 zsh_add_path "/usr/local/opt/ruby/bin"
 
 # Ruby
+[[ -d "~/.rbenv/bin" ]] && eval "$(~/.rbenv/bin/rbenv init - zsh)"
 command_exists ruby && command_exists gem && zsh_add_path "$(ruby -e 'puts Gem.bindir')"
 
 # Perl
