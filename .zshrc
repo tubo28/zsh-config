@@ -267,6 +267,10 @@ zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 # kubectl
 command_exists kubectl && source <(kubectl completion zsh)
 
+# tfenv
+# https://github.com/tfutils/tfenv
+zsh_add_path "$HOME/.tfenv/bin"
+
 ## Starship
 if command_exists starship; then
     eval "$(starship init zsh)"
