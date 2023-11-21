@@ -176,6 +176,13 @@ fi
 # uniq but keep order
 uniq2() { perl -ne 'print if !$u{$_}++' }
 
+# URL encode and decode
+urlencode() { perl -MURI::Escape -nle 'print uri_escape($_)' }
+urldecode() { perl -MURI::Escape -nle 'print uri_unescape($_)' }
+
+# Convert UNIX timestamp to ISO8601
+timeat() { perl -MTime::Piece -nle 'print localtime($_)->strftime("%Y-%m-%dT%H:%M:%S%z")' }
+
 ## PATH
 
 # Homebrew
