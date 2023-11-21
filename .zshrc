@@ -232,6 +232,9 @@ zsh_add_path "$HOME/.cargo/bin"
 # Zig
 zsh_add_path "/usr/local/zig"
 
+# Python
+command_exists pyenv && eval "$(pyenv init --path)"
+
 # My bin
 if [[ -d ~/.local/bin ]]; then
     zsh_add_path "$HOME/.local/bin"
