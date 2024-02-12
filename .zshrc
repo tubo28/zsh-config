@@ -281,6 +281,11 @@ command_exists kubectl && source <(kubectl completion zsh)
 # https://github.com/tfutils/tfenv
 zsh_add_path "$HOME/.tfenv/bin"
 
+# direnv
+if command_exists direnv; then
+    eval "$(direnv hook zsh)"
+fi
+
 ## Starship
 if command_exists starship; then
     eval "$(starship init zsh)"
