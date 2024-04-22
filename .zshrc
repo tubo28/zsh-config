@@ -240,7 +240,9 @@ zsh_add_path "$HOME/.cargo/bin"
 zsh_add_path "/usr/local/zig"
 
 # Python
-command_exists pyenv && eval "$(pyenv init --path)"
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 # My bin
 if [[ -d ~/.local/bin ]]; then
