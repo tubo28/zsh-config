@@ -269,12 +269,13 @@ if command_exists brew && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; t
     source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 fi
 
-# Sdkman
+# Scala coursier
+zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
+zsh_add_path "$HOME/.local/share/coursier/bin"
+
+# Sdkman (eval after coursier to prioritize sdkman)
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# Scala
-zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
 
 # kubectl
 command_exists kubectl && source <(kubectl completion zsh)
