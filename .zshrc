@@ -244,6 +244,9 @@ export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
+# Node
+command_exists nodenv && eval "$(nodenv init -)"
+
 # My bin
 if [[ -d ~/.local/bin ]]; then
     zsh_add_path "$HOME/.local/bin"
