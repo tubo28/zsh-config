@@ -241,8 +241,8 @@ zsh_add_path "/usr/local/zig"
 
 # Python
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+command_exists pyenv || zsh_add_path "$PYENV_ROOT/bin"
+command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
 command_exists nodenv && eval "$(nodenv init -)"
