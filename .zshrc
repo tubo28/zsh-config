@@ -245,6 +245,7 @@ command_exists pyenv || zsh_add_path "$PYENV_ROOT/bin"
 command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
+zsh_add_path "$HOME/.nodenv/bin"
 command_exists nodenv && eval "$(nodenv init -)"
 
 # My bin
