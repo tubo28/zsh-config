@@ -224,7 +224,7 @@ command_exists rbenv || zsh_add_path "$HOME/.rbenv/bin"
 command_exists rbenv && eval "$(rbenv init - zsh)"
 
 # Perl
-zsh_add_path "$HOME/.plenv/bin"
+command_exists pyenv || zsh_add_path "$HOME/.plenv/bin"
 command_exists plenv && eval "$(plenv init -)"
 
 # Go
@@ -245,7 +245,7 @@ command_exists pyenv || zsh_add_path "$PYENV_ROOT/bin"
 command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
-zsh_add_path "$HOME/.nodenv/bin"
+command_exists nodenv || zsh_add_path "$HOME/.nodenv/bin"
 command_exists nodenv && eval "$(nodenv init -)"
 
 # My bin
@@ -255,7 +255,9 @@ if [[ -d ~/.local/bin ]]; then
 fi
 
 # Private file
-[[ -f ~/.private ]] && source ~/.private
+if [[ -f ~/.private ]]; then
+    source ~/.private
+fi
 
 # Editor
 if command_exists nano; then
@@ -274,8 +276,8 @@ if command_exists brew && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; t
 fi
 
 # Scala coursier
-zsh_add_path "$HOME/Library/Application Support/Coursier/bin"
-zsh_add_path "$HOME/.local/share/coursier/bin"
+zsh_add_path "$HOME/Library/Application Support/Coursier/bin" # macOS
+zsh_add_path "$HOME/.local/share/coursier/bin" # Linux
 
 # Sdkman (eval after coursier to prioritize sdkman)
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -289,9 +291,7 @@ command_exists kubectl && source <(kubectl completion zsh)
 zsh_add_path "$HOME/.tfenv/bin"
 
 # direnv
-if command_exists direnv; then
-    eval "$(direnv hook zsh)"
-fi
+command_exists direnv && eval "$(direnv hook zsh)"
 
 ## Starship
 if command_exists starship; then
