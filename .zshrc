@@ -245,6 +245,9 @@ command_exists pyenv || zsh_add_path "$PYENV_ROOT/bin"
 command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
+# 
+# git clone https://github.com/nodenv/nodenv.git ~/.nodenv
+# git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build
 command_exists nodenv || zsh_add_path "$HOME/.nodenv/bin"
 command_exists nodenv && eval "$(nodenv init -)"
 
