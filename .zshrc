@@ -93,9 +93,19 @@ zle -N fzf-select-history
 bindkey '^r' fzf-select-history
 
 fzf-ghq() {
-  local target_dir=$(ghq list -p | fzf --query="$LBUFFER")
+  candidate=$(mktemp)
+  cat $HOME/.ghq_history | tac | head -n 10 >> $candidate
+  ghq list -p >> $candidate
 
-  if [ -n "$target_dir" ]; then
+  local target_dir=$(cat $candidate | uniq2 | fzf --query="$LBUFFER")
+  if [ -n "$target_dir" ]; then # if target_dir is not empty
+    # save selection to history
+    echo "$target_dir" >> $HOME/.ghq_history
+    # dedup history and keep last 10
+    tmp=$(mktemp)
+    cat $HOME/.ghq_history | uniq3 | tail -n 10 >> $tmp
+    cat $tmp > $HOME/.ghq_history
+
     BUFFER="cd ${target_dir}"
     zle accept-line
   fi
@@ -175,6 +185,8 @@ fi
 
 # uniq but keep order
 uniq2() { perl -ne 'print if !$u{$_}++' }
+# uniq2と同じだが後ろのものを保持し前のものを削除
+uniq3() { perl -ne 'push @a, $_; $h{$_} = $.; END { for $i (sort { $h{$a} <=> $h{$b} } keys %h) { print $i } }' }
 
 # URL encode and decode
 urlencode() { perl -MURI::Escape -nle 'print uri_escape($_)' }
