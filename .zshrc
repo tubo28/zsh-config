@@ -257,11 +257,12 @@ command_exists pyenv || zsh_add_path "$PYENV_ROOT/bin"
 command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
-# 
-# git clone https://github.com/nodenv/nodenv.git ~/.nodenv
-# git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build
-command_exists nodenv || zsh_add_path "$HOME/.nodenv/bin"
-command_exists nodenv && eval "$(nodenv init -)"
+# fnm https://github.com/Schniz/fnm
+FNM_PATH="$HOME/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
 
 # My bin
 if [[ -d ~/.local/bin ]]; then
