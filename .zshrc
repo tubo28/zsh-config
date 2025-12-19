@@ -258,10 +258,18 @@ command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
 # fnm https://github.com/Schniz/fnm
-FNM_PATH="$HOME/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$FNM_PATH:$PATH"
-  eval "`fnm env`"
+if [ -d "/opt/homebrew/opt/fnm/bin" ]; then
+    FNM_PATH="/opt/homebrew/opt/fnm/bin"
+    if [ -d "$FNM_PATH" ]; then
+        zsh_add_path "$FNM_PATH"
+        eval "`fnm env`"
+    fi
+elif [ -d "$HOME/.local/share/fnm" ]; then
+    FNM_PATH="$HOME/.local/share/fnm"
+    if [ -d "$FNM_PATH" ]; then
+        zsh_add_path "$FNM_PATH"
+        eval "`fnm env`"
+    fi
 fi
 
 # My bin
