@@ -246,7 +246,9 @@ command_exists go || zsh_add_path "/usr/local/opt/go/bin"
 command_exists go && zsh_add_path "$(go env GOPATH)/bin"
 
 # Rust
-zsh_add_path "$HOME/.cargo/bin"
+if [[ -f "$HOME/.cargo/env" ]]; then
+    . "$HOME/.cargo/env"
+fi
 
 # Zig
 zsh_add_path "/usr/local/zig"
