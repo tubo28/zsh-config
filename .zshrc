@@ -274,6 +274,11 @@ elif [ -d "$HOME/.local/share/fnm" ]; then
     fi
 fi
 
+# jenv
+if command_exists jenv; then
+    eval "$(jenv init -)"
+fi
+
 # My bin
 if [[ -d ~/.local/bin ]]; then
     zsh_add_path "$HOME/.local/bin"
