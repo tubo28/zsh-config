@@ -132,30 +132,19 @@ zle -N select-git-switch
 bindkey "^s" select-git-switch
 
 ## Alias
-alias ls="ls --color=auto"
+alias mv="mv -i"
+
+alias cp="cp -r"
 alias l="ls"
-alias k="l"
-alias s="l"
-alias ks="l"
-alias sl="l"
 alias la="l -a"
 alias ll="l -lh"
 alias lla="l -lah"
-
-alias cp="cp -r"
-alias mv="mv -i"
+alias ls="ls --color=auto"
 alias rm="rm -ri"
-
-alias c="cd"
 alias u="cd .."
 
-alias f='fg'
-alias fgfg='f'
-
-alias g="git"
 alias t="tig"
-
-alias d="docker"
+alias c="claude"
 
 # Always no-window mode on WSL
 [[ -f /proc/version ]] && grep -qi microsoft /proc/version && alias emacs='emacs -nw'
