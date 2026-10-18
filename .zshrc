@@ -266,7 +266,15 @@ fi
 
 # jenv
 if command_exists jenv; then
-    eval "$(jenv init -)"
+    # Not `eval "$(jenv init -)"`: it spends ~1s per shell (init ~600ms, rehash ~400ms, refresh-plugins ~150ms).
+    # Shims are rehashed by `jenv add` anyway, so cache the init script and drop the per-shell maintenance commands.
+    jenv_init_cache="$XDG_CACHE_HOME/zsh/jenv-init.zsh"
+    if [[ ! -s $jenv_init_cache || ${commands[jenv]:A} -nt $jenv_init_cache ]]; then
+        mkdir -p "${jenv_init_cache:h}"
+        jenv init - --no-rehash zsh | grep -v '^jenv refresh-plugins' > "$jenv_init_cache"
+    fi
+    source "$jenv_init_cache"
+    unset jenv_init_cache
 fi
 
 # My bin
