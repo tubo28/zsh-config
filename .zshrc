@@ -59,13 +59,12 @@ setopt auto_param_slash
 ## 補完候補のカーソル選択を有効に
 zstyle ':completion:*:default' menu select=1
 ## 補完候補の色づけ
-if command_exists dircolors; then
-    eval `dircolors`
-    export ZLS_COLORS=$LS_COLORS
-elif command_exists gdircolors; then
-    eval `gdircolors`
+dircolors_bin=${commands[dircolors]:-$commands[gdircolors]}
+if [[ -n $dircolors_bin ]]; then
+    eval "$($dircolors_bin)"
     export ZLS_COLORS=$LS_COLORS
 fi
+unset dircolors_bin
 
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 ## 補完候補一覧でファイルの種別をマーク表示
