@@ -92,6 +92,7 @@ bindkey '^r' fzf-select-history
 
 fzf-ghq() {
   local history_file=$HOME/.ghq_history
+  [[ -e $history_file ]] || touch $history_file
   local target_dir=$({ tail -n 10 $history_file | tac; ghq list -p } | uniq2 | fzf --query="$LBUFFER")
   if [[ -n $target_dir ]]; then
     local recent=$({ cat $history_file; print -r -- $target_dir } | uniq3 | tail -n 10)
