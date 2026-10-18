@@ -108,11 +108,14 @@ bindkey "^g" fzf-ghq
 
 # https://zenn.dev/yamo/articles/5c90852c9c64ab
 function select-git-switch() {
+  # Not `git branch -a`: its decorations (*, +, "HEAD -> ...") have to be scraped off
   local target_br=$(
-    git branch -a --sort=-committerdate |
-      fzf --preview-window="right,65%" --preview="echo {} | tr -d ' *' | xargs git log --color=always" |
-        head -n 1 |
-        perl -pe "s/\s//g; s/\*//g; s/remotes\/origin\///g"
+    git for-each-ref --sort=-committerdate --format='%(refname)' refs/heads refs/remotes |
+      grep -v '^refs/remotes/[^/]*/HEAD$' |
+      sed -E 's#^refs/heads/##; s#^refs/##' |
+      fzf --preview-window="right,65%" --preview="git log --color=always {} --" |
+      head -n 1 |
+      sed -E 's#^remotes/[^/]+/##'
   )
   if [ -n "$target_br" ]; then
     BUFFER="git switch $target_br"
