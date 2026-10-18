@@ -226,7 +226,7 @@ command_exists rbenv || zsh_add_path "$HOME/.rbenv/bin"
 command_exists rbenv && eval "$(rbenv init - zsh)"
 
 # Perl
-command_exists pyenv || zsh_add_path "$HOME/.plenv/bin"
+command_exists plenv || zsh_add_path "$HOME/.plenv/bin"
 command_exists plenv && eval "$(plenv init -)"
 
 # Go
