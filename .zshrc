@@ -50,9 +50,6 @@ bindkey -e
 ## 色を使う
 setopt prompt_subst
 
-## 補完機能の有効
-autoload -Uz compinit
-compinit
 ## TAB で順に補完候補を切り替える
 setopt auto_menu
 ## サスペンド中のプロセスと同じコマンド名を実行した場合はリジューム
@@ -278,7 +275,6 @@ export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_
 # gcloud
 if [[ -n $BREW_PREFIX && -d "$BREW_PREFIX/share/google-cloud-sdk/" ]]; then
     source "$BREW_PREFIX/share/google-cloud-sdk/path.zsh.inc"
-    source "$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # Scala coursier
@@ -288,9 +284,6 @@ path_prepend "$HOME/.local/share/coursier/bin" # Linux
 # Sdkman (eval after coursier to prioritize sdkman)
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# kubectl
-command_exists kubectl && source <(kubectl completion zsh)
 
 # tfenv
 # https://github.com/tfutils/tfenv
@@ -320,15 +313,26 @@ if command_exists git; then
     [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
     source "${ZINIT_HOME}/zinit.zsh"
 
-    autoload -Uz _zinit
-    (( ${+_comps} )) && _comps[zinit]=_zinit
-
     # Install plugins
     zinit load z-shell/F-Sy-H
     zinit load zsh-users/zsh-autosuggestions
     zinit load zsh-users/zsh-completions
     zinit load agkozak/zsh-z
+    zinit ice as"completion"
     zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 else
     echo "failed to initialize zinit; git is not installed" >&2
 fi
+
+## 補完機能の有効
+# Not earlier: zinit puts plugin completion dirs on fpath only as it loads them
+autoload -Uz compinit
+compinit
+# Register the compdef calls zinit plugins made before compinit
+(( ${+functions[zinit]} )) && zinit cdreplay -q
+
+# These call compdef/complete, so they need compinit first
+if [[ -n $BREW_PREFIX && -d "$BREW_PREFIX/share/google-cloud-sdk/" ]]; then
+    source "$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
+fi
+command_exists kubectl && source <(kubectl completion zsh)
