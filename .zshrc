@@ -349,5 +349,5 @@ if command_exists git; then
     zinit load agkozak/zsh-z
     zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 else
-    echo "failed to initialize zinit; git is not installed" 2>&1
+    echo "failed to initialize zinit; git is not installed" >&2
 fi
