@@ -80,6 +80,8 @@ setopt list_types
 setopt list_packed
 # 可能な限り曖昧に多くの候補を列挙
 zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list
+## 小文字の入力で大文字の候補にもマッチさせる
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 ## fzf
 fzf-select-history() {
