@@ -200,7 +200,8 @@ elif [[ -f "/opt/homebrew/bin/brew" ]]; then # M1 Mac or later
 fi
 
 if command_exists $BREW_BIN; then
-    BREW_PREFIX=$($BREW_BIN --prefix)
+    # `brew shellenv` already sets HOMEBREW_PREFIX; avoid spawning brew again (~30ms each)
+    BREW_PREFIX=${HOMEBREW_PREFIX:-$($BREW_BIN --prefix)}
     for bindir in $BREW_PREFIX/opt/*/libexec/gnubin; do
         zsh_add_path "$bindir"
     done
@@ -290,9 +291,9 @@ export FZF_DEFAULT_COMMAND="find -type d -name .git -prune -o -print"
 export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_history --bind=ctrl-p:up,ctrl-n:down,ctrl-j:accept,ctrl-k:kill-line --no-sort --no-mouse"
 
 # gcloud
-if command_exists brew && [[ -d "$(brew --prefix)/share/google-cloud-sdk/" ]]; then
-    source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" # This may need to be adjusted if the gcloud init script isn't directly translatable to zsh.
-    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+if [[ -n $BREW_PREFIX && -d "$BREW_PREFIX/share/google-cloud-sdk/" ]]; then
+    source "$BREW_PREFIX/share/google-cloud-sdk/path.zsh.inc" # This may need to be adjusted if the gcloud init script isn't directly translatable to zsh.
+    source "$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # Scala coursier
