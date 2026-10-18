@@ -1,12 +1,8 @@
 ## LANG
 export LANG="en_US.UTF-8"
 
-# ディレクトリが存在するかつまだ追加されていない場合のみPATHに追加
-zsh_add_path() {
-    if [[ -d $1 ]] && [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
-        export PATH="$1:$PATH"
-    fi
-}
+# Dirs are prepended as `path=(dir(N-/^M) $path)`: (N-/) keeps only existing dirs, ^M drops the slash added by mark_dirs
+typeset -U path
 
 command_exists() { command -v "$1" > /dev/null 2>&1; }
 
@@ -197,38 +193,41 @@ fi
 if command_exists $BREW_BIN; then
     # `brew shellenv` already sets HOMEBREW_PREFIX; avoid spawning brew again (~30ms each)
     BREW_PREFIX=${HOMEBREW_PREFIX:-$($BREW_BIN --prefix)}
-    for bindir in $BREW_PREFIX/opt/*/libexec/gnubin; do
-        zsh_add_path "$bindir"
-    done
     # GNU のコマンドが存在する場合に優先的に使う
-    for bindir in $BREW_PREFIX/opt/*/bin; do
-        zsh_add_path "$bindir"
-    done
-    for mandir in $BREW_PREFIX/opt/*/libexec/gnuman; do
-        export MANPATH="$mandir:$MANPATH"
-    done
-    for mandir in $BREW_PREFIX/opt/*/share/man/man1; do
-        export MANPATH="$mandir:$MANPATH"
-    done
+    path=(
+        $BREW_PREFIX/opt/*/bin(N-/On^M)
+        $BREW_PREFIX/opt/*/libexec/gnubin(N-/On^M)
+        $path
+    )
+    # Not `typeset -U manpath`: it drops the trailing empty entry that makes man also search the system default dirs
+    brew_mandirs=(
+        $BREW_PREFIX/opt/*/share/man/man1(N-/On^M)
+        $BREW_PREFIX/opt/*/libexec/gnuman(N-/On^M)
+    )
+    manpath=($brew_mandirs ${manpath:|brew_mandirs} "")
+    unset brew_mandirs
 fi
 
-zsh_add_path "/Applications/IntelliJ IDEA.app/Contents/MacOS"
-zsh_add_path "/snap/bin"
-zsh_add_path "/usr/local/opt/ruby/bin"
+path=(
+    /usr/local/opt/ruby/bin(N-/^M)
+    /snap/bin(N-/^M)
+    "/Applications/IntelliJ IDEA.app/Contents/MacOS"(N-/^M)
+    $path
+)
 
 # Ruby
-command_exists rbenv || zsh_add_path "$HOME/.rbenv/bin"
+command_exists rbenv || path=(~/.rbenv/bin(N-/^M) $path)
 command_exists rbenv && eval "$(rbenv init - zsh)"
 
 # Perl
-command_exists plenv || zsh_add_path "$HOME/.plenv/bin"
+command_exists plenv || path=(~/.plenv/bin(N-/^M) $path)
 command_exists plenv && eval "$(plenv init -)"
 
 # Go
-command_exists go || zsh_add_path "/usr/local/go/bin"
-command_exists go || zsh_add_path "/usr/local/opt/go/bin"
+command_exists go || path=(/usr/local/go/bin(N-/^M) $path)
+command_exists go || path=(/usr/local/opt/go/bin(N-/^M) $path)
 # Bins installed by `go install`
-command_exists go && zsh_add_path "$(go env GOPATH)/bin"
+command_exists go && path=($(go env GOPATH)/bin(N-/^M) $path)
 
 # Rust
 if [[ -f "$HOME/.cargo/env" ]]; then
@@ -236,11 +235,11 @@ if [[ -f "$HOME/.cargo/env" ]]; then
 fi
 
 # Zig
-zsh_add_path "/usr/local/zig"
+path=("/usr/local/zig"(N-/^M) $path)
 
 # Python
 export PYENV_ROOT="$HOME/.pyenv"
-command_exists pyenv || zsh_add_path "$PYENV_ROOT/bin"
+command_exists pyenv || path=("$PYENV_ROOT/bin"(N-/^M) $path)
 command_exists pyenv && eval "$(pyenv init -)"
 
 # Node
@@ -248,13 +247,13 @@ command_exists pyenv && eval "$(pyenv init -)"
 if [ -d "/opt/homebrew/opt/fnm/bin" ]; then
     FNM_PATH="/opt/homebrew/opt/fnm/bin"
     if [ -d "$FNM_PATH" ]; then
-        zsh_add_path "$FNM_PATH"
+        path=("$FNM_PATH"(N-/^M) $path)
         eval "`fnm env`"
     fi
 elif [ -d "$HOME/.local/share/fnm" ]; then
     FNM_PATH="$HOME/.local/share/fnm"
     if [ -d "$FNM_PATH" ]; then
-        zsh_add_path "$FNM_PATH"
+        path=("$FNM_PATH"(N-/^M) $path)
         eval "`fnm env`"
     fi
 fi
@@ -274,7 +273,7 @@ fi
 
 # My bin
 if [[ -d ~/.local/bin ]]; then
-    zsh_add_path "$HOME/.local/bin"
+    path=("$HOME/.local/bin"(N-/^M) $path)
     export LD_LIBRARY_PATH="$HOME/.local/lib:$HOME/.local/lib64:$LD_LIBRARY_PATH"
 fi
 
@@ -300,8 +299,8 @@ if [[ -n $BREW_PREFIX && -d "$BREW_PREFIX/share/google-cloud-sdk/" ]]; then
 fi
 
 # Scala coursier
-zsh_add_path "$HOME/Library/Application Support/Coursier/bin" # macOS
-zsh_add_path "$HOME/.local/share/coursier/bin" # Linux
+path=("$HOME/Library/Application Support/Coursier/bin"(N-/^M) $path) # macOS
+path=("$HOME/.local/share/coursier/bin"(N-/^M) $path) # Linux
 
 # Sdkman (eval after coursier to prioritize sdkman)
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -312,7 +311,7 @@ command_exists kubectl && source <(kubectl completion zsh)
 
 # tfenv
 # https://github.com/tfutils/tfenv
-zsh_add_path "$HOME/.tfenv/bin"
+path=("$HOME/.tfenv/bin"(N-/^M) $path)
 
 # direnv
 command_exists direnv && eval "$(direnv hook zsh)"
