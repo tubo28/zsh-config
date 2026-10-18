@@ -112,7 +112,7 @@ bindkey "^g" fzf-ghq
 
 # https://zenn.dev/yamo/articles/5c90852c9c64ab
 function select-git-switch() {
-  target_br=$(
+  local target_br=$(
     git branch -a --sort=-committerdate |
       fzf --preview-window="right,65%" --preview="echo {} | tr -d ' *' | xargs git log --color=always" |
         head -n 1 |
@@ -159,7 +159,7 @@ ggcd() {
 # generate random string
 if [[ -f "$ZDOTDIR/randstr.pl" ]]; then
     randstr() {
-        result=$(perl "$ZDOTDIR/randstr.pl" "$@")
+        local result=$(perl "$ZDOTDIR/randstr.pl" "$@")
         if [[ ! -z "$result" ]]; then
             echo $result
             echo $result >> "$HOME/.randstr"
