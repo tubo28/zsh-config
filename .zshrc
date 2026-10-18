@@ -36,10 +36,6 @@ setopt noautoremoveslash
 ## Emacsライクキーバインド設定
 bindkey -e
 
-# 色有効
-autoload -U colors
-colors
-
 ## 色を使う
 setopt prompt_subst
 
@@ -280,7 +276,7 @@ export FZF_DEFAULT_OPTS="--exact --multi --cycle --reverse --history=$HOME/.fzf_
 
 # gcloud
 if [[ -n $BREW_PREFIX && -d "$BREW_PREFIX/share/google-cloud-sdk/" ]]; then
-    source "$BREW_PREFIX/share/google-cloud-sdk/path.zsh.inc" # This may need to be adjusted if the gcloud init script isn't directly translatable to zsh.
+    source "$BREW_PREFIX/share/google-cloud-sdk/path.zsh.inc"
     source "$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
 fi
 
@@ -312,7 +308,6 @@ else
     autoload -Uz vcs_info
     precmd() { vcs_info }
     zstyle ':vcs_info:git:*' formats '%b '
-    setopt PROMPT_SUBST
     PROMPT='%F{green}%*%f %F{cyan}%~%f %F{red}${vcs_info_msg_0_}%f$ '
 fi
 
