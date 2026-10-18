@@ -148,12 +148,9 @@ alias c="claude"
 # ghq get and cd
 ggcd() {
     echo "ghq get $@"
-    local tmp=$(mktemp)
-    ghq get $@ 2>&1 | tee $tmp
-    # sed for remove color
-    local dir=$(cat $tmp | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" | perl -ne 'for (split) { print $_ and exit, last if -d $_ }')
-    rm -f $tmp
-    cd $dir || return 2
+    # ghq prints progress to stderr and the got repo paths to stdout
+    local dir=$(ghq get "$@" | head -n 1)
+    [[ -d $dir ]] && cd "$dir" || return 2
 }
 
 # generate random string
