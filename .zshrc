@@ -93,18 +93,13 @@ zle -N fzf-select-history
 bindkey '^r' fzf-select-history
 
 fzf-ghq() {
-  candidate=$(mktemp)
-  cat $HOME/.ghq_history | tac | head -n 10 >> $candidate
-  ghq list -p >> $candidate
-
-  local target_dir=$(cat $candidate | uniq2 | fzf --query="$LBUFFER")
+  local target_dir=$({ cat $HOME/.ghq_history | tac | head -n 10; ghq list -p } | uniq2 | fzf --query="$LBUFFER")
   if [ -n "$target_dir" ]; then # if target_dir is not empty
     # save selection to history
     echo "$target_dir" >> $HOME/.ghq_history
     # dedup history and keep last 10
-    tmp=$(mktemp)
-    cat $HOME/.ghq_history | uniq3 | tail -n 10 >> $tmp
-    cat $tmp > $HOME/.ghq_history
+    local recent=$(cat $HOME/.ghq_history | uniq3 | tail -n 10)
+    echo "$recent" > $HOME/.ghq_history
 
     BUFFER="cd ${target_dir}"
     zle accept-line
