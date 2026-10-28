@@ -239,6 +239,9 @@ done
 unset fnm_dir
 
 # jenv
+# Run `jenv enable-plugin export`
+# eval "$(jenv init -)"
+# for d in /Library/Java/JavaVirtualMachines/temurin-*.jdk/Contents/Home; do jenv add "$d"; done
 if command_exists jenv; then
     # Not `eval "$(jenv init -)"`: it spends ~1s per shell (init ~600ms, rehash ~400ms, refresh-plugins ~150ms).
     # Shims are rehashed by `jenv add` anyway, so cache the init script and drop the per-shell maintenance commands.
