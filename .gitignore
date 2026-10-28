@@ -1,3 +1,4 @@
-*.zwc
-.zcompdump
 .zcompcache/*
+.zcompdump
+.zsh_sessions/*
+*.zwc
